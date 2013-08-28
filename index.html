@@ -1,0 +1,158 @@
+﻿<!DOCTYPE HTML>
+<html manifest="OfflineApp.manifest">
+<head>
+<meta charset="utf-8">
+<title>Geolocation</title>
+<meta name="generator" content="NSB/AppStudio 3.1.7.1$mrhj" />
+<meta name="date" content="2013-08-28 09:48:00.575000" />
+<meta name="version" content="1.0.0" />
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=0.6667, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="YES" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="copyright" content="copyright 2012 ABC Company" />
+<link rel="apple-touch-icon" href="nsb/images/LauncherIcon57.png" />
+<link rel="apple-touch-startup-image" href="nsb/images/SplashScreen.png" />
+<script src="messages.js"></script>
+<script src="nsb/hfunc.js"></script>
+<link href="nsb/nsbstyle.css" rel="stylesheet">
+<script src="nsb/fastclick.js"></script>
+<link href="nsb/css/style.css" rel="stylesheet">
+<script src="nsb/iscroll.js"></script>
+
+
+
+<style type="text/css">
+#btnStart {position:absolute; left:62px; right:auto; top:311px; bottom:auto; height:24px; width:80px}
+#btnStop {position:absolute; left:198px; right:auto; top:311px; bottom:auto; height:24px; width:70px}
+#Map_scroller {position: absolute; width:300px; height:200px; left:10px; top:1px;}
+#Map {position:absolute; left:0px; top:0px; height:200px; width:300px}
+#TextArea1 {position:absolute; left:10px; right:auto; top:205px; bottom:auto; height:90px; width:300px}
+body * {font-family:helvetica}
+</style>
+</head>
+<body style="margin:0px;background-image:url('nsb/images/backgroundStripes.png');">
+<script>if (typeof NSB_FastClick=='undefined') window.addEventListener('load', function() {new FastClick(document.body)}, false)</script>
+<div data-role="page" id="Page_geolocation" data-theme="c" style="background-image:url('nsb/images/backgroundStripes.png')">
+<form id="form1" action="" method="GET" onsubmit="return false;" style="display:none; height:100%; position:absolute; top:0px; left:0px; width:100%; ">
+<input type="button" id="btnStart" class="nsbbutton"  style="font-size:12px; font-family:helvetica; font-style:normal; font-weight:bold; color:; background-color:; " name="" value="Start" data-role='none'>
+<input type="button" id="btnStop" class="nsbbutton"  style="font-size:12px; font-family:helvetica; font-style:normal; font-weight:bold; color:; background-color:; " name="" value="Stop" data-role='none'>
+<div id="Map_scroller" class=""   style="font-size:13px; font-family:helvetica; font-style:normal; font-weight:normal; color:black; border-style:groove;" name="">
+<div id="Map" style="overflow:auto; background-color:white; height:auto; min-width:300px;">
+
+</div>
+</div>
+<textarea id="TextArea1" class="" name=""  style="text-align:left; font-size:13px; font-family:helvetica; font-style:normal; font-weight:normal; color:black; background-color:white;-webkit-overflow-scrolling:touch; " onblur="" onclick=""  autocorrect="on"  autocomplete="on"  autocapitalize="on"  placeholder="" data-role='none'></textarea>
+</form>
+</div>
+<script>
+if ('Please use Google Chrome, Apple Safari or another supported browser.') {
+  if ((!navigator.vendor) || ((navigator.vendor.indexOf('Apple') === -1) && (navigator.vendor.indexOf('Google') === -1) && (navigator.vendor.indexOf('Research') === -1))) {
+    alert('Please use Google Chrome, Apple Safari or another supported browser. (' + navigator.vendor + ')');
+  }
+}
+
+if (navigator.userAgent.indexOf('iPad') !== -1) {
+  var splashscreen = document.createElement('link');
+  splashscreen.rel = 'apple-touch-startup-image';
+  splashscreen.href = '';
+  document.getElementsByTagName('head')[0].appendChild(splashscreen);
+}
+
+window.addEventListener('load', function() {
+  form1.style.display = 'block';
+  NSB.addProperties(btnStart);
+  NSB.addProperties(btnStop);
+if (false) {Map_ref = new iScroll('Map_scroller',{ bounce: false, zoom:true });
+    Map.refresh=function(){setTimeout(Map_ref.refresh(),100)}}
+  NSB.addProperties(Map,Map_scroller);
+  TextArea1.ontouchmove=function(e){e.stopPropagation()};NSB.addProperties(TextArea1);
+  form1.style.display = 'none';
+}, false);
+if(!''){
+  form1.onsubmit=function(event){
+    window.event.cancelBubble=true;
+    window.event.returnValue=false}};
+NSB.addProperties(form1);
+ //Geolocation - this sample gets the current location
+ //and displays a map of it. It also shows the current
+ //speed and altitude.
+
+ //Set up global variables
+var  gps;
+longitude = -79.20989561;
+latitude = 43.73768353;
+btnStop.disabled=True;
+lastRefresh=0;
+
+btnStart.onclick = function() { savethefunction_rvar="";
+ //This starts scanning the current location. It checks it every 5 seconds.
+ //If it gets the data successfully, the handler function is called.
+ //If not, errorCallBack is called.
+  options={timeout: 5000, maximumAge: 5000, enableHighAccuracy: True}
+  gps=navigator.geolocation.watchPosition(handler, errorCallBack, options);
+
+ //disable the stop button, enable the start button
+  btnStart.disabled=True;
+  btnStop.disabled=False;
+return savethefunction_rvar; }
+
+btnStop.onclick = function() { savethefunction_rvar="";
+ //Stop checking the current location
+  navigator.geolocation.clearWatch(gps);
+  btnStart.disabled=False;
+  btnStop.disabled=True;
+return savethefunction_rvar; }
+
+function handler(location) { savethefunction_rvar="";
+ var  s;
+  s = "Longitude: " + location.coords.longitude  +  '\n';
+  s = s  +  "Latitude: " + location.coords.latitude  +  '\n';
+  s = s  +  "Speed: " + location.coords.speed  +  " ";
+  s = s  +  "Altitude: " + location.coords.altitude  +  '\n';
+  s = s  +  "Accuracy: " + location.coords.accuracy  +  " ";
+  s = s  +  "Accuracy(altitude): " + location.coords.altitudeAccuracy  +  " "  +  '\n';
+ //different browsers return the timestamp in different formats.
+ //this converts it if necessary.
+  if(IsNumeric(location.timestamp)) {
+    gpsDate=new Date(location.timestamp);
+ } else {
+    gpsDate=location.timestamp;
+  }
+  TextArea1.value = s  +  "Timestamp: " + gpsDate;
+  ShowMap(location.coords.latitude, location.coords.longitude);
+return savethefunction_rvar; }
+
+function errorCallBack(Error) { savethefunction_rvar="";
+ //unable to get the geolocation data
+  _msgbox_confirm(Error.message  +  '\n'  +  "Show default map...");
+  ShowMap(latitude, longitude);
+return savethefunction_rvar; }
+
+function ShowMap(latitude, longitude) { savethefunction_rvar="";
+ //This function displays a Google map.
+ //only update the map every 10 seconds.
+ //For information on the Google Static Maps API, go here:
+ //http://code.google.com/apis/maps/documentation/staticmaps/
+  if(SysInfo(10)-lastRefresh<10000 )  { return savethefunction_rvar; }
+  lastRefresh=SysInfo(10);
+  s = "'http://maps.google.com/maps/api/staticmap?center="  +   latitude  +  ","  +  longitude  +   "&zoom=14&size=300x200&maptype=roadmap&sensor=false&output=embed'";
+  Map.innerHTML="<img width=300 height=200 src="  +  s   +  "></img>";
+return savethefunction_rvar; }
+
+
+
+window.addEventListener('load', function() {
+  form1.style.display = 'block';
+  if (typeof(form1.onshow)=='function') {form1.onshow()};
+  Main();
+}, false);
+
+var NSBCurrentForm = form1;
+
+
+
+</script>
+
+</body>
+</html>
